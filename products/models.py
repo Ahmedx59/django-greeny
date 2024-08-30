@@ -3,7 +3,7 @@ from django.utils.translation import gettext as _
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.validators import MinValueValidator , MaxValueValidator
-
+from taggit.managers import TaggableManager
 FLAG_OPTION = (
     ('New','New'),
     ('Feature','Feature'),
@@ -23,7 +23,7 @@ class Product(models.Model):
     quantitity = models.IntegerField(_("Quantitity"))
     brand = models.ForeignKey('Brand',related_name='product_brand',on_delete=models.SET_NULL,null=True,blank=True)
     category =models.ForeignKey('Category',related_name='product_category',on_delete=models.SET_NULL,null=True,blank=True)
-
+    tags = TaggableManager()
 
     def __str__(self):
         return self.name

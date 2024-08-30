@@ -5,7 +5,7 @@ products :
     images  *
     subtitle
     description
-    tags  *
+    tags  *packege
     price
     flag [new,sale,feature] 
     quantitity
