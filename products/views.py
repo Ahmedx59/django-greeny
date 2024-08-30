@@ -10,5 +10,6 @@ from .models import Product
 class ProductList(generic.ListView):
     model = Product
 
-
+class productDetail(generic.DeleteView):
+    model = Product
 
