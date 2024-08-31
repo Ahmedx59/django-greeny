@@ -16,6 +16,7 @@ FLAG_OPTION = (
 class Product(models.Model):
     name = models.CharField(_("Name"),max_length=100)
     subtitle = models.CharField(_("Subtitle"),max_length=500)
+    img = models.ImageField(upload_to='Product_img' ,blank=True, null=True)
     sku = models.IntegerField(_("Sku"))
     desc = models.TextField(_("Desccription"),max_length=10000)
     price = models.FloatField(_("Price"))
@@ -23,7 +24,7 @@ class Product(models.Model):
     quantitity = models.IntegerField(_("Quantitity"))
     brand = models.ForeignKey('Brand',related_name='product_brand',on_delete=models.SET_NULL,null=True,blank=True)
     category =models.ForeignKey('Category',related_name='product_category',on_delete=models.SET_NULL,null=True,blank=True)
-
+    
 
     def __str__(self):
         return self.name
