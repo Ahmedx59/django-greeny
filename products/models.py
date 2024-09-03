@@ -4,6 +4,9 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.core.validators import MinValueValidator , MaxValueValidator
 
+from taggit.managers import TaggableManager
+
+
 FLAG_OPTION = (
     ('New','New'),
     ('Feature','Feature'),
@@ -23,19 +26,25 @@ class Product(models.Model):
     flag = models.CharField(_("Flag"),max_length=10 , choices=FLAG_OPTION)
     quantitity = models.IntegerField(_("Quantitity"))
     brand = models.ForeignKey('Brand',related_name='product_brand',on_delete=models.SET_NULL,null=True,blank=True)
-    category =models.ForeignKey('Category',related_name='product_category',on_delete=models.SET_NULL,null=True,blank=True)
-    
+    category = models.ForeignKey('Category',related_name='product_category',on_delete=models.SET_NULL,null=True,blank=True)
+    tags = TaggableManager()
+
+
 
     def __str__(self):
         return self.name
+    
 
 
 class ProductImages(models.Model):
     product = models.ForeignKey(Product,related_name='product_image',on_delete=models.CASCADE)
     image = models.ImageField(upload_to='product_images/')
 
+
     def __str__(self):
         return str(self.product)
+
+
 
 class Brand(models.Model):
     name = models.CharField(_("Name"),max_length=100)

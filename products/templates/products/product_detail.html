@@ -35,14 +35,13 @@
                     <div class="col-lg-6">
                         <div class="details-gallery">
                             <div class="details-label-group">
-                                <label class="details-label new">{{product.flag}}</label>
-                                <label class="details-label off">-10%</label>
+                                <label class="details-label new">{{object.flag}}</label>
                             </div>
                             <ul class="details-preview"> 
                                 <li><img src="{{product.img.url}}" alt="product" style="width: 600px; height: 600px;"></li>
                             </ul>
                             <ul class="details-thumb">
-                                {% for item in product_image %}
+                                {% for item in object.product_image.all %}
                                     <li><img src="{{item.image.url}}" alt="product" style= 'width: 130px;height: 130px;'  ></li>
                                 {% endfor %}
                             </ul>
@@ -51,10 +50,10 @@
                     <div class="col-lg-6">
 
                         <div class="details-content">
-                            <h3 class="details-name"><a href="#">{{product.name}}</a></h3>
+                            <h3 class="details-name"><a href="#">{{object.name}}</a></h3>
                             <div class="details-meta">
-                                <p>SKU:<span>{{product.sku}}</span></p>
-                                <p>BRAND:<a href="#">{{product.brand}}</a></p>
+                                <p>SKU:<span>{{object.sku}}</span></p>
+                                <p>BRAND:<a href="#">{{object.brand}}</a></p>
                             </div>
                             <div class="details-rating">
                                 <i class="active icofont-star"></i>
@@ -65,16 +64,15 @@
                                 <a href="#">(3 reviews)</a>
                             </div>
                             <h3 class="details-price">
-                                <del>$38.00</del>
-                                <span>{{product.price}}<small>/per kilo</small></span>
+                                <span>{{object.price}}<small>/per kilo</small></span>
                             </h3>
-                            <p class="details-desc">{{product.subtitle}}</p>
+                            <p class="details-desc">{{object.subtitle}}</p>
                             <div class="details-list-group">
                                 <label class="details-list-title">tags:</label>
                                 <ul class="details-tag-list">
-                                    <li><a href="#">organic</a></li>
-                                    <li><a href="#">fruits</a></li>
-                                    <li><a href="#">chilis</a></li>
+                                    {% for tag in object.tags.all %}
+                                        <li><a href="#">{{tags}}</a></li>
+                                    {% endfor %}
                                 </ul>
                             </div>
                             <div class="details-list-group">
@@ -101,10 +99,6 @@
                                 <a class="details-wish wish" href="#" title="Add Your Wishlist">
                                     <i class="icofont-heart"></i>
                                     <span>add to wish</span>
-                                </a>
-                                <a class="details-compare" href="compare.html" title="Compare This Item">
-                                    <i class="fas fa-random"></i>
-                                    <span>Compare This</span>
                                 </a>
                             </div>
                         </div>
@@ -136,7 +130,7 @@
                         <div class="col-lg-12">
                             <div class="product-details-frame">
                                 <div class="tab-descrip">
-                                    <p>{{product.desc }}</p>
+                                    <p>{{object.desc }}</p>
                                 </div>
                             </div>
                         </div>
