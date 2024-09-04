@@ -366,7 +366,7 @@
                                         <label class="standard-label off">{{product.flag}}</label>
                                     </div>
                                     <div class="standard-media">
-                                        <a class="standard-image" href="{% url 'products:product_detail' product.id %}">
+                                        <a class="standard-image" href="{% url 'products:product_detail' product.slug %}">
                                             <img src="{{product.img.url}}" alt="product" style="width: 300px; height: 250px;">
                                         </a>
                                         <div class="standard-widget">
@@ -377,7 +377,7 @@
                                     </div>
                                     <div class="standard-content">
                                         <h4 class="standard-name">
-                                            <a href="{% url 'products:product_detail' product.id %}">{{product.name}}</a>
+                                            <a href="{% url 'products:product_detail' product.slug %}">{{product.name}}</a>
                                         </h4>
                                         <h5 class="standard-price">
                                             <span>${{product.price}}<small>/piece</small></span>

@@ -1,7 +1,7 @@
 
 from django.shortcuts import render
 from django.views import generic
-from .models import Product , ProductImages , productReview
+from .models import Product , ProductImages , productReview , Brand
  
 
 
@@ -21,4 +21,9 @@ class ProductDetail(generic.DetailView):
         context["reviews"] = productReview.objects.filter(product = self.get_object())
         context['related_product'] = Product.objects.filter(category = self.get_object().category)
         return context
-    
+
+
+
+
+class Brand_List(generic.ListView):
+    model = Brand
