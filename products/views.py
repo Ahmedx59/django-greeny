@@ -27,3 +27,15 @@ class ProductDetail(generic.DetailView):
 
 class Brand_List(generic.ListView):
     model = Brand
+
+
+
+class Brand_Detail(generic.DetailView):
+    model = Brand 
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["related_brand"] = Product.objects.filter(brand = self.get_object()) 
+        return context
+    
