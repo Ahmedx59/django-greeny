@@ -11,8 +11,6 @@ FLAG_OPTION = (
     ('New','New'),
     ('Feature','Feature'),
     ('Sale','Sale'),
-    
-
 )
 
 
