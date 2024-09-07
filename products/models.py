@@ -22,8 +22,8 @@ class Product(models.Model):
     img = models.ImageField(upload_to='Product_img' ,blank=True, null=True)
     sku = models.IntegerField(_("Sku"))
     desc = models.TextField(_("Desccription"),max_length=10000)
-    price = models.FloatField(_("Price"))
     flag = models.CharField(_("Flag"),max_length=10 , choices=FLAG_OPTION)
+    price = models.FloatField(_("Price"))
     quantitity = models.IntegerField(_("Quantitity"))
     brand = models.ForeignKey('Brand',related_name='product_brand',on_delete=models.SET_NULL,null=True,blank=True)
     category = models.ForeignKey('Category',related_name='product_category',on_delete=models.SET_NULL,null=True,blank=True)
@@ -62,7 +62,7 @@ class Brand(models.Model):
 
 class category(models.Model):
     name = models.CharField(_("Name"),max_length=100)
-    image = models.ImageField(_("Image"),upload_to='brands/')
+    image = models.ImageField(_("Image"),upload_to='categories/')
 
     def __str__(self):
         return self.name
