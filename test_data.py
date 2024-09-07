@@ -7,7 +7,7 @@ from faker import Faker
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project.settings')
 django.setup()
 
-from products.models import Product, ProductImages, productReview, Brand, category
+from products.models import Product, ProductImages, productReview, Brand, category ,User
 
 # RANDOM_STR = lambda n: ''.join(random.choices(string.ascii_uppercase + string.digits, k=n))
 
@@ -48,7 +48,21 @@ def create_products(n):
         )
     print(f'{n} Product created successfully')
 
-create_brands(3)
+# create_brands(3)
 # create_category(1)
 
+def creat_review(n):
+    faker = Faker()
+    for x in range(n):
+        productReview.objects.create(
+            user = User.objects.all().order_by('?')[0],
+            product = Product.objects.all().order_by('?')[0],
+            rate = random.randint(1,5),
+            review = faker.sentence,
 
+        )
+    print(f'{n} review created successfully')
+
+
+
+creat_review(5)
