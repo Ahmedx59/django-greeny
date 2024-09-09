@@ -12,6 +12,7 @@ class ProductsListSerializer(serializers.ModelSerializer):
             'img',
             'flag',
             'price',
+            'brand',
         ]
 
 
@@ -23,7 +24,14 @@ class ProductsDetailSerializer(serializers.ModelSerializer):
 
 
 
-class BrandSerializer(serializers.ModelSerializer):
+class BrandListSerializer(serializers.ModelSerializer):
     class Meta:
+        model = Brand
+        fields = '__all__'
+
+
+class BrandDetailSerializer(serializers.ModelSerializer):
+    product = ProductsListSerializer(source = 'product_brand' , many=True)
+    class Meta :
         model = Brand
         fields = '__all__'
