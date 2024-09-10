@@ -1,8 +1,10 @@
+from django.db.models.aggregates import Avg
 from rest_framework import serializers
 
 from .models import productReview , Product , ProductImages , Brand , category
 
 class ProductsListSerializer(serializers.ModelSerializer):
+    avg_rate = serializers.SerializerMethodField
     class Meta:
         model = Product
         fields = [
@@ -14,6 +16,15 @@ class ProductsListSerializer(serializers.ModelSerializer):
             'price',
             'brand',
         ]
+
+
+
+    def get_avg_rate(self,product):
+        avg = product.product_review.aggregate(rate_avg=Avg('rate'))
+        if not avg['rate_avg'] :
+            result = 0 
+            return result
+        return avg['rete_avg']
 
 
 class ProductsDetailSerializer(serializers.ModelSerializer):

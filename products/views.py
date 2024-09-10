@@ -23,6 +23,12 @@ class ProductDetail(generic.DetailView):
         return context
 
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context[""] = ''
+        return context
+    
+
 
 
 class Brand_List(generic.ListView):
