@@ -22,11 +22,6 @@ class ProductDetail(generic.DetailView):
         context['related_product'] = Product.objects.filter(category = self.get_object().category)
         return context
 
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context[""] = ''
-        return context
     
 
 
