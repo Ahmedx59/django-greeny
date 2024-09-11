@@ -80,7 +80,30 @@ def product_update_api(request,pk):
 
 
 
+@api_view(['POST'])
+def brand_create_api(request):
+    data = request.data
+    brand = Brand.objects.create(
 
+        name = data.get('name'),
+        image = data.get('image')
+    )
+    serializer = BrandDetailSerializer(brand).data
+    return Response(serializer)
+
+
+
+
+@api_view(['PATCH'])
+def brand_update_api(request,pk):
+    data = request.data
+    brand = Brand.objects.get(id=pk)
+
+    brand.name = data.get('name')
+    brand.image = data.get('img')
+    brand.save() 
+    serializer = BrandDetailSerializer(brand).data
+    return Response(serializer)
 
 
 

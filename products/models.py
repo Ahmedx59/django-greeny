@@ -43,7 +43,7 @@ class Product(models.Model):
 
 class ProductImages(models.Model):
     product = models.ForeignKey(Product,related_name='product_image',on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='product_images/')
+    image = models.ImageField(upload_to='product_images/',null=True,blank=True)
 
 
     def __str__(self):
@@ -52,8 +52,8 @@ class ProductImages(models.Model):
 
 
 class Brand(models.Model):
-    name = models.CharField(_("Name"),max_length=100)
-    image = models.ImageField(_("Image"),upload_to='brands/')
+    name = models.CharField(_("Name"),max_length=100,null=True,blank=True)
+    image = models.ImageField(_("Image"),upload_to='brands/',null=True,blank=True)
 
     def __str__(self):
         return self.name
@@ -61,8 +61,8 @@ class Brand(models.Model):
 
 
 class category(models.Model):
-    name = models.CharField(_("Name"),max_length=100)
-    image = models.ImageField(_("Image"),upload_to='categories/')
+    name = models.CharField(_("Name"),max_length=100,null=True,blank=True)
+    image = models.ImageField(_("Image"),upload_to='categories/',null=True,blank=True)
 
     def __str__(self):
         return self.name
@@ -72,9 +72,9 @@ class category(models.Model):
 class productReview(models.Model):
     user = models.ForeignKey(User,related_name='user_review',verbose_name=_("User"),on_delete=models.CASCADE)
     product = models.ForeignKey(Product,related_name='product_review',verbose_name=_("Product"),on_delete=models.CASCADE)
-    rate = models.IntegerField(_("Rate"),validators=[MaxValueValidator(5),MinValueValidator(0)]) 
-    review = models.TextField(_("Review"),max_length=1000)
-    created_at = models.DateTimeField(_("Created at"),default=timezone.now)
+    rate = models.IntegerField(_("Rate"),validators=[MaxValueValidator(5),MinValueValidator(0)],null=True,blank=True) 
+    review = models.TextField(_("Review"),max_length=1000,null=True,blank=True)
+    created_at = models.DateTimeField(_("Created at"),default=timezone.now,null=True,blank=True)
 
 
     def __str__(self):
