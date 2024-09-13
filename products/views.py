@@ -5,7 +5,11 @@ from .models import Product , ProductImages , productReview , Brand
  
 
 
+# def queryset_debug(request):
+#     # data = Product.objects.filter(price__gt=70)
+#     data= Product.objects.filter(price__gte = 50)
 
+#     return render(request,'product/debug.html',{'data':data})
 
 
 class ProductList(generic.ListView):

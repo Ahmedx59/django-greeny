@@ -42,41 +42,54 @@ class BrandDetailAPI(generics.RetrieveAPIView):
 @api_view(['POST'])
 def product_create_api(request):
     data = request.data
-    product = Product.objects.create(
-        name = data.get('name'),
-        subtitle = data.get('subtitle'),
-        img = data.get('img'),
-        sku = data.get('sku'),
-        desc = data.get('desc'),
-        flag = data.get('flag'),
-        price = data.get('price'),
-        quantitity = data.get('quantitity'),
-        brand =  data.get('brand'),
-    )    
-    serializer = ProductsDetailSerializer(product).data
-    return Response(serializer)
+    serializer = ProductsDetailSerializer(data = data)
+    if serializer.is_valid():
+        brand = Brand.objects.get(id = data['brand'])
+        my_category = category.objects.get(id = data['category'] )
+        product = Product.objects.create(
+            name = data.get('name'),
+            subtitle = data.get('subtitle'),
+            img = data.get('img'),
+            sku = data.get('sku'),
+            desc = data.get('desc'),
+            flag = data.get('flag'),
+            price = data.get('price'),
+            quantitity = data.get('quantitity'),  
+        )    
+        product.brand = brand
+        product.category = my_category
+        product.save()
+        serializer = ProductsDetailSerializer(product).data
+        return Response(serializer)
+    
+    return Response(serializer.errors)
 
 
 @api_view(['PATCH'])
 def product_update_api(request,pk):
-    product = Product.objects.get(id=pk)
     data = request.data
+    product = Product.objects.get(id=pk)
+    serializer = ProductsDetailSerializer(data = data)
+    if serializer.is_valid():
+        brand = Brand.objects.get(id = data['brand'])
+        my_category = category.objects.get(id = data['category'])
 
-    product.name = data.get('name')
-    product.subtitle = data.get('subtitle')
-    product.img = data.get('img')
-    product.sku = data.get('sku')
-    product.desc = data.get('desc')
-    product.flag = data.get('flag')
-    product.price = data.get('price')
-    product.quantitity = data.get('quantitity')
+        product.name = data.get('name')
+        product.subtitle = data.get('subtitle')
+        product.img = data.get('img')
+        product.sku = data.get('sku')
+        product.desc = data.get('desc')
+        product.flag = data.get('flag')
+        product.price = data.get('price')
+        product.quantitity = data.get('quantitity')
 
-    brand = Brand.objects.get(id=data['brand'])
-    product.brand = brand
-    product.save()
+        product.brand = brand
+        product.category = my_category
+        product.save()
 
-    serializer = ProductsDetailSerializer(product).data
-    return Response(serializer)
+        serializer = ProductsDetailSerializer(product).data
+        return Response(serializer)
+    return Response(serializer.errors)
 
 
 
