@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework import generics
+from rest_framework import generics, mixins
 
 from .models import productReview , ProductImages, Product , Brand , category
 from .serializers import ProductsListSerializer , ProductsDetailSerializer , BrandDetailSerializer , BrandListSerializer
@@ -42,19 +42,26 @@ class BrandDetailAPI(generics.RetrieveAPIView):
 @api_view(['POST'])
 def product_create_api(request):
     data = request.data
-    product = Product.objects.create(
-        name = data.get('name'),
-        subtitle = data.get('subtitle'),
-        img = data.get('img'),
-        sku = data.get('sku'),
-        desc = data.get('desc'),
-        flag = data.get('flag'),
-        price = data.get('price'),
-        quantitity = data.get('quantitity'),
-        brand =  data.get('brand'),
-    )    
-    serializer = ProductsDetailSerializer(product).data
-    return Response(serializer)
+    serializer = ProductsDetailSerializer(data=data)
+    if serializer.is_valid():
+        brand = Brand.objects.get(id=data['brand'])
+        my_category = category.objects.get(id=data['category'])
+        product = Product.objects.create(
+            name=data.get('name'),
+            subtitle = data.get('subtitle'),
+            img = data.get('img'),
+            sku = data.get('sku'),
+            price=data.get('price'),
+            desc=data.get('description'),
+            flag = data.get('flag'),
+            quantitity = data.get('quantitity'),
+        ) 
+        product.brand = brand
+        product.category = my_category
+        product.save()    
+        serializer = ProductsDetailSerializer(product).data
+        return Response(serializer)
+    return Response(serializer.errors)
 
 
 @api_view(['PATCH'])
