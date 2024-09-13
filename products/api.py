@@ -39,6 +39,80 @@ class BrandDetailAPI(generics.RetrieveAPIView):
 
 
 
+class ProductGenericsAPIView(generics.GenericAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductsListSerializer
+
+    def get(self,request,*args, **kwargs):
+
+        pk = self.kwargs['pk']
+        if pk :
+            queryset = self.get_object()
+            serializer = ProductsDetailSerializer(queryset)
+            return Response(serializer.data)
+
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset , many=True)
+        return Response(serializer.data)
+    
+    def post(self,request , *args, **kwargs):
+        pass
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @api_view(['POST'])
 def product_create_api(request):
     data = request.data

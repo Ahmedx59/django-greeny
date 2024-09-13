@@ -3,6 +3,24 @@ from rest_framework import serializers
 
 from .models import productReview , Product , ProductImages , Brand , category
 
+
+
+
+
+
+class CategoryListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = category
+        fields = '__all__'
+
+
+
+
+
+
+
+
+
 class ProductsListSerializer(serializers.ModelSerializer):
     avg_rate = serializers.SerializerMethodField
     class Meta:
@@ -25,9 +43,19 @@ class ProductsListSerializer(serializers.ModelSerializer):
             result = 0 
             return result
         return avg['rete_avg']
+    
+
+class BrandListSerializer(serializers.ModelSerializer):
+    class Meta :
+        model = Brand
+        fields = '__all__'
 
 
 class ProductsDetailSerializer(serializers.ModelSerializer):
+    
+    brand = BrandListSerializer()
+    category = CategoryListSerializer()
+
     class Meta:
         model = Product
         fields = '__all__'
