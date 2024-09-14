@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework import generics
 
 from .models import productReview , ProductImages, Product , Brand , category
-from .serializers import ProductsListSerializer , ProductsDetailSerializer , BrandDetailSerializer , BrandListSerializer
+from .serializers import ProductsListSerializer , ProductsDetailSerializer , BrandDetailSerializer , BrandListSerializer , ProductsCreateSerializer
 
 
 
@@ -44,8 +44,7 @@ class ProductGenericsAPIView(generics.GenericAPIView):
     serializer_class = ProductsListSerializer
 
     def get(self,request,*args, **kwargs):
-
-        pk = self.kwargs['pk']
+        pk = self.kwargs.get('pk')
         if pk :
             queryset = self.get_object()
             serializer = ProductsDetailSerializer(queryset)
@@ -56,8 +55,15 @@ class ProductGenericsAPIView(generics.GenericAPIView):
         return Response(serializer.data)
     
     def post(self,request , *args, **kwargs):
-        pass
-    
+        serializer = ProductsCreateSerializer(data = request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+
+
+
+        
     
 
 
