@@ -87,8 +87,8 @@ class BrandGenericsAPIView(generics.GenericAPIView):
     def get(self,request,*args, **kwargs):
         pk = self.kwargs.get('pk')
         if pk :
-            queryset = self.get_queryset()
-            serializer = self.get_serializer(queryset)
+            queryset = self.get_queryset().filter(pk=pk).first()
+            serializer = BrandDetailSerializer(queryset)
             return Response(serializer.data)
 
         queryset = self.get_queryset()
