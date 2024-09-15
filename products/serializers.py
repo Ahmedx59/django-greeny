@@ -83,3 +83,9 @@ class BrandDetailSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class BrandCreateSerializer(serializers.ModelSerializer):
+    class Meta :
+        model = Brand
+        fields = '__all__'
+
+

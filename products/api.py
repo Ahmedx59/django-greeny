@@ -3,7 +3,7 @@ from rest_framework.decorators import api_view
 from rest_framework import generics
 
 from .models import ProductReview , ProductImages, Product , Brand , Category
-from .serializers import ProductsListSerializer , ProductsDetailSerializer , BrandDetailSerializer , BrandListSerializer , ProductsCreateSerializer
+from .serializers import ProductsListSerializer , ProductsDetailSerializer , BrandDetailSerializer , BrandListSerializer , ProductsCreateSerializer , BrandCreateSerializer
 
 
 
@@ -94,8 +94,32 @@ class BrandGenericsAPIView(generics.GenericAPIView):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset , many=True)
         return Response(serializer.data) 
+    
 
-        
+    def post(self,request,*args, **kwargs):
+        serializer = BrandCreateSerializer(data = request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
+
+    def patch(self,request,*args, **kwargs):
+        brand = self.get_object()
+        serializer = BrandCreateSerializer(brand , data = request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    
+    def delete(self , request , *args, **kwargs):
+        brand  = self.get_object()
+        brand.delete()
+        return Response({'details' :' delete successfully'})
+    
+
+    
+
+    
+
     
 
 
