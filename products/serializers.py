@@ -1,7 +1,7 @@
 from django.db.models.aggregates import Avg
 from rest_framework import serializers
 
-from .models import productReview , Product , ProductImages , Brand , category
+from .models import ProductReview , Product , ProductImages , Brand , Category
 
 
 
@@ -10,7 +10,7 @@ from .models import productReview , Product , ProductImages , Brand , category
 
 class CategoryListSerializer(serializers.ModelSerializer):
     class Meta:
-        model = category
+        model = Category
         fields = '__all__'
 
 
@@ -63,7 +63,7 @@ class ProductsDetailSerializer(serializers.ModelSerializer):
 class ProductsCreateSerializer(serializers.ModelSerializer):
 
     brand = serializers.PrimaryKeyRelatedField(queryset = Brand.objects.all())
-    category = serializers.PrimaryKeyRelatedField(queryset = Brand.objects.all())
+    category = serializers.PrimaryKeyRelatedField(queryset = Category.objects.all())
 
     class Meta:
         model = Product

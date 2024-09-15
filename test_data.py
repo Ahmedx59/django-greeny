@@ -3,7 +3,7 @@ import random
 import os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project.settings')
 django.setup()
-from products.models import Brand , Product , productReview , category , ProductImages
+from products.models import Brand , Product , ProductReview , Category , ProductImages
 from faker import Faker
 
 
@@ -26,7 +26,7 @@ def brand_data(n):
 def category_data(n):
     faker = Faker()
     for x in range(n):
-        category.objects.create(
+        Category.objects.create(
             name = faker.name(),
             image = f'categories/category{random.randint(0,5)}.jpg'
             
@@ -43,7 +43,7 @@ def category_data(n):
 # print(category_count)
 def product_data(n):
     faker = Faker()
-    category_count = category.objects.all().count()
+    category_count = Category.objects.all().count()
     brand_count = Brand.objects.all().count()
     for x in range(n):
         Product.objects.create(
@@ -56,7 +56,7 @@ def product_data(n):
             flag = random.choice(['New','Feature','Sale']),
             quantitity = random.randint(0,100),
             brand = Brand.objects.get(id = random.randint(1,brand_count)),
-            category = category.objects.get(id = random.randint(1,category_count))
+            category = Category.objects.get(id = random.randint(1,category_count))
 
         )
     print(f'successful create {n} ')

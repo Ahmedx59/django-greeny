@@ -2,7 +2,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import generics
 
-from .models import productReview , ProductImages, Product , Brand , category
+from .models import ProductReview , ProductImages, Product , Brand , Category
 from .serializers import ProductsListSerializer , ProductsDetailSerializer , BrandDetailSerializer , BrandListSerializer , ProductsCreateSerializer
 
 
@@ -59,9 +59,41 @@ class ProductGenericsAPIView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+    
+    def patch(self,request , *args, **kwargs):
+        product = self.get_object()
+        serializer = ProductsCreateSerializer(product , data = request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response (serializer.data)
+    
+
+    def delete(self,request,*args, **kwargs):
+        product = self.get_object()
+        product.delete()
+        return Response({'details' :' delete success'})
 
 
 
+
+
+
+
+
+class BrandGenericsAPIView(generics.GenericAPIView):
+    queryset = Brand.objects.all()
+    serializer_class = BrandListSerializer
+
+    def get(self,request,*args, **kwargs):
+        pk = self.kwargs.get('pk')
+        if pk :
+            queryset = self.get_queryset()
+            serializer = self.get_serializer(queryset)
+            return Response(serializer.data)
+
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset , many=True)
+        return Response(serializer.data) 
 
         
     
@@ -125,7 +157,7 @@ def product_create_api(request):
     serializer = ProductsDetailSerializer(data = data)
     if serializer.is_valid():
         brand = Brand.objects.get(id = data['brand'])
-        my_category = category.objects.get(id = data['category'] )
+        my_category = Category.objects.get(id = data['category'] )
         product = Product.objects.create(
             name = data.get('name'),
             subtitle = data.get('subtitle'),
@@ -152,7 +184,7 @@ def product_update_api(request,pk):
     serializer = ProductsDetailSerializer(data = data)
     if serializer.is_valid():
         brand = Brand.objects.get(id = data['brand'])
-        my_category = category.objects.get(id = data['category'])
+        my_category = Category.objects.get(id = data['category'])
 
         product.name = data.get('name')
         product.subtitle = data.get('subtitle')
@@ -161,7 +193,7 @@ def product_update_api(request,pk):
         product.desc = data.get('desc')
         product.flag = data.get('flag')
         product.price = data.get('price')
-        product.quantitity = data.get('quantitity')
+        product.quantity = data.get('quantitity')
 
         product.brand = brand
         product.category = my_category
