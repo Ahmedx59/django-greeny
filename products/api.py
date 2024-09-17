@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from rest_framework import generics
+from rest_framework import generics, mixins
 
 from .models import ProductReview , ProductImages, Product , Brand , Category
 from .serializers import ProductsListSerializer , ProductsDetailSerializer , BrandDetailSerializer , BrandListSerializer , ProductsCreateSerializer , BrandCreateSerializer
@@ -39,20 +39,16 @@ class BrandDetailAPI(generics.RetrieveAPIView):
 
 
 
-class ProductGenericsAPIView(generics.GenericAPIView):
+class ProductGenericsAPIView(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    generics.GenericAPIView):
+
     queryset = Product.objects.all()
     serializer_class = ProductsListSerializer
 
     def get(self,request,*args, **kwargs):
-        pk = self.kwargs.get('pk')
-        if pk :
-            queryset = self.get_object()
-            serializer = ProductsDetailSerializer(queryset)
-            return Response(serializer.data)
-
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset , many=True)
-        return Response(serializer.data)
+        return self.list(request,*args, **kwargs)
     
     def post(self,request , *args, **kwargs):
         serializer = ProductsCreateSerializer(data = request.data)
