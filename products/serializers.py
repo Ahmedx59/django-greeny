@@ -1,6 +1,6 @@
 from django.db.models.aggregates import Avg
 from rest_framework import serializers
-
+from taggit.serializers import (TagListSerializerField,TaggitSerializer)
 from .models import ProductReview , Product , ProductImages , Brand , Category
 
 
@@ -53,8 +53,9 @@ class BrandListSerializer(serializers.ModelSerializer):
 
 class ProductsDetailSerializer(serializers.ModelSerializer):
     
-    brand = BrandListSerializer(read_only = True)
+    brand = BrandListSerializer( )
     category = CategoryListSerializer(read_only = True)
+    # tags = TagListSerializerField()
 
     class Meta:
         model = Product
