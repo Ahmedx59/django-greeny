@@ -18,9 +18,6 @@ class ProductViewSet(viewsets.ModelViewSet):
     ordering_fields = ['price', 'quantity']
         
 
-
-
-
     def get_serializer_class(self):
         if self.action == 'retrieve':
             return ProductsDetailSerializer
@@ -28,6 +25,20 @@ class ProductViewSet(viewsets.ModelViewSet):
             return ProductsCreateSerializer
         return super().get_serializer_class()
         
+
+
+
+
+class BrandViewSet(viewsets.ModelViewSet):
+    queryset = Brand.objects.all()
+    serializer_class = BrandListSerializer
+
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return BrandDetailSerializer
+    
+        return super().get_serializer_class()
+
 
 
 class ProductGenericsAPIView(
@@ -75,40 +86,43 @@ class ProductGenericsAPIView(
 
 
 
-class BrandGenericsAPIView(generics.GenericAPIView):
+class BrandGenericsAPIView(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    generics.GenericAPIView):
     queryset = Brand.objects.all()
     serializer_class = BrandListSerializer
+
+
+
+    def get_serializer_class(self):
+        if self.request.method in ['POST','PATCH','GET']:
+            return BrandCreateSerializer
+        
+        if self.request.method == 'GET' and self.kwargs.get('pk'):
+            return BrandDetailSerializer
+        
+        return super().get_serializer_class()
 
     def get(self,request,*args, **kwargs):
         pk = self.kwargs.get('pk')
         if pk :
-            queryset = self.get_queryset().filter(pk=pk).first()
-            serializer = BrandDetailSerializer(queryset)
-            return Response(serializer.data)
-
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset , many=True)
-        return Response(serializer.data) 
+            return self.retrieve(request,*args, **kwargs)
+        return self.list(request,*args, **kwargs)
     
 
     def post(self,request,*args, **kwargs):
-        serializer = BrandCreateSerializer(data = request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+        return self.create(request,*args, **kwargs)
     
 
     def patch(self,request,*args, **kwargs):
-        brand = self.get_object()
-        serializer = BrandCreateSerializer(brand , data = request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+        return self.update(request,*args, **kwargs)
     
     def delete(self , request , *args, **kwargs):
-        brand  = self.get_object()
-        brand.delete()
-        return Response({'details' :' delete successfully'})
+        return self.destroy(request,*args, **kwargs)
     
 
     
