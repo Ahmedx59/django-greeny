@@ -50,14 +50,15 @@ class ProductsDetailSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ProductsCreateSerializer(serializers.ModelSerializer):
-
-    brand = serializers.PrimaryKeyRelatedField(queryset = Brand.objects.all())
-    category = serializers.PrimaryKeyRelatedField(queryset = Category.objects.all())
-
     class Meta:
         model = Product
         fields ='__all__'
-
+    
+    def update(self, instance, validated_data):
+        user = self.context['request'].user
+        if user != instance.user:
+            raise serializers.ValidationError({'detail':'you cant update this product'})
+        return super().update(instance, validated_data)
 
 class BrandDetailSerializer(serializers.ModelSerializer):
     product = ProductsListSerializer(source = 'product_brand' , many=True)
