@@ -40,7 +40,7 @@ class BrandListSerializer(serializers.ModelSerializer):
 
 
 class ProductsDetailSerializer(serializers.ModelSerializer): 
-    brand = BrandListSerializer( )
+    brand = BrandListSerializer()
     category = CategoryListSerializer(read_only = True)
     # tags = TagListSerializerField()
     class Meta:
@@ -48,8 +48,6 @@ class ProductsDetailSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ProductsCreateSerializer(serializers.ModelSerializer):
-    brand = serializers.PrimaryKeyRelatedField(queryset = Brand.objects.all())
-    category = serializers.PrimaryKeyRelatedField(queryset = Category.objects.all())
     class Meta:
         model = Product
         fields ='__all__'

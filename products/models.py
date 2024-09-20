@@ -17,6 +17,7 @@ FLAG_OPTION = (
 
 
 class Product(models.Model):
+    user = models.ForeignKey(User, related_name="user", on_delete=models.CASCADE, blank=True, null=True)
     name = models.CharField(_("Name"),max_length=   100)
     subtitle = models.CharField(_("Subtitle"),max_length=500,null=True,blank=True)
     img = models.ImageField(upload_to='Product_img' ,blank=True, null=True)
