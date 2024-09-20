@@ -52,20 +52,20 @@ class ProductImages(models.Model):
 
 
 class Brand(models.Model):
-    name = models.CharField(_("Name"),max_length=100,null=True,blank=True)
+    name = models.CharField(_("Name"),max_length=100,default='unnamed brand')
     image = models.ImageField(_("Image"),upload_to='brands/',null=True,blank=True)
 
     def __str__(self):
-        return self.name
+        return self.name or 'unnamed brand'
 
 
 
 class Category(models.Model):
-    name = models.CharField(_("Name"),max_length=100,null=True,blank=True)
+    name = models.CharField(_("Name"),max_length=100,default='unnamed category')
     image = models.ImageField(_("Image"),upload_to='categories/',null=True,blank=True)
 
     def __str__(self):
-        return self.name
+        return self.name or 'unnamed category'
 
 
 
