@@ -12,11 +12,12 @@ class CategoryListSerializer(serializers.ModelSerializer):
 
 
 class ProductsListSerializer(serializers.ModelSerializer):
-    avg_rate = serializers.SerializerMethodField
+    avg_rate = serializers.SerializerMethodField()
     class Meta:
         model = Product
         fields = [
             'id',
+            'avg_rate',
             'name',
             'subtitle',
             'img',
@@ -25,12 +26,11 @@ class ProductsListSerializer(serializers.ModelSerializer):
             'brand',
         ]
 
-    def get_avg_rate(self,product):
+    def get_avg_rate(self, product):
         avg = product.product_review.aggregate(rate_avg=Avg('rate'))
-        if not avg['rate_avg'] :
-            result = 0 
-            return result
-        return avg['rete_avg']
+        if not avg['rate_avg']:
+            return 0
+        return avg['rate_avg']
     
 
 class BrandListSerializer(serializers.ModelSerializer):
@@ -39,21 +39,17 @@ class BrandListSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ProductsDetailSerializer(serializers.ModelSerializer):
-    
+class ProductsDetailSerializer(serializers.ModelSerializer): 
     brand = BrandListSerializer( )
     category = CategoryListSerializer(read_only = True)
     # tags = TagListSerializerField()
-
     class Meta:
         model = Product
         fields = '__all__'
 
 class ProductsCreateSerializer(serializers.ModelSerializer):
-
     brand = serializers.PrimaryKeyRelatedField(queryset = Brand.objects.all())
     category = serializers.PrimaryKeyRelatedField(queryset = Category.objects.all())
-
     class Meta:
         model = Product
         fields ='__all__'
