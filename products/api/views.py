@@ -27,6 +27,13 @@ class ProductViewSet(viewsets.ModelViewSet):
         
 
 
+class ProductMerchantViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductsListSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return super().get_queryset().filter(user=user)
 
 
 class BrandViewSet(viewsets.ModelViewSet):

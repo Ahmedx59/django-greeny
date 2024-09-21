@@ -52,6 +52,12 @@ class ProductsCreateSerializer(serializers.ModelSerializer):
         model = Product
         fields ='__all__'
 
+    def update(self, instance, validated_data):
+        user = self.context['request'].user
+        if user != instance.user :
+            raise serializers.ValidationError({'permission denied':'you cant update this product'})
+        return super().update(instance, validated_data)
+
 
 class BrandDetailSerializer(serializers.ModelSerializer):
     product = ProductsListSerializer(source = 'product_brand' , many=True)
