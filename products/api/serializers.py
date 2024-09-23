@@ -64,3 +64,18 @@ class BrandDetailSerializer(serializers.ModelSerializer):
     class Meta :
         model = Brand
         fields = '__all__'
+
+
+class RivewListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductReview
+        fields = ['rate', 'review']
+
+    def create(self, validated_data):
+        user = self.context['request'].user
+        product_id = self.context['view'].kwargs['product_id']
+        product = Product.objects.get(id=product_id)
+
+        validated_data['user'] = user
+        validated_data['product'] = product
+        return super().create(validated_data)

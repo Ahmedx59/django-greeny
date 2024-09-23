@@ -5,7 +5,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 
 from ..models import ProductReview , ProductImages, Product , Brand , Category
-from .serializers import ProductsListSerializer , ProductsDetailSerializer , BrandDetailSerializer , BrandListSerializer , ProductsCreateSerializer 
+from .serializers import ProductsListSerializer , ProductsDetailSerializer , BrandDetailSerializer , BrandListSerializer , ProductsCreateSerializer ,RivewListSerializer
 
 
 
@@ -24,7 +24,6 @@ class ProductViewSet(viewsets.ModelViewSet):
         if self.action in ['create', 'update']:
             return ProductsCreateSerializer
         return super().get_serializer_class()
-        
 
 
 class ProductMerchantViewSet(viewsets.ReadOnlyModelViewSet):
@@ -45,4 +44,11 @@ class BrandViewSet(viewsets.ModelViewSet):
             return BrandDetailSerializer
     
         return super().get_serializer_class()
+    
+class ReiviewCreateViewSet(mixins.CreateModelMixin,viewsets.GenericViewSet):
+    queryset = ProductReview.objects.all()
+    serializer_class = RivewListSerializer
 
+    # def get_queryset(self):
+    #     product_id = self.kwargs['product_id']
+    #     return super().get_queryset()
