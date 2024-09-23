@@ -5,7 +5,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 
 from ..models import ProductReview , ProductImages, Product , Brand , Category
-from .serializers import ProductsListSerializer , ProductsDetailSerializer , BrandDetailSerializer , BrandListSerializer , ProductsCreateSerializer 
+from .serializers import ProductsListSerializer , ProductsDetailSerializer , BrandDetailSerializer , BrandListSerializer , ProductsCreateSerializer , ProductReviewSerializer
 
 
 
@@ -38,4 +38,11 @@ class BrandViewSet(viewsets.ModelViewSet):
             return BrandDetailSerializer
     
         return super().get_serializer_class()
+
+
+
+class ReviewViewSet(mixins.CreateModelMixin,viewsets.GenericViewSet):
+    queryset = ProductReview.objects.all()
+    serializer_class = ProductReviewSerializer
+
 

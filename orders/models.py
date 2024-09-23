@@ -36,7 +36,7 @@ class CartDetail(models.Model):
 class Order(models.Model):
     user = models.ForeignKey(User,related_name='user_order',on_delete=models.SET_NULL , blank=True, null=True)
     status = models.CharField(max_length=10 , choices=ORDER_STATUS)
-    code = models.CharField(default=generate_code)
+    code = models.CharField(max_length=20,default=generate_code)
     order_time = models.DateTimeField(default=timezone.now)
     delivery_time = models.DateTimeField(blank=True, null=True)
 
