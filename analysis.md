@@ -8,20 +8,26 @@ products :
     tags  *
     price
     flag [new,sale,feature] 
-    quantitity
-    reviews  *[user_is,producr_id,rate[0:5],feedback,datetime]
+    quantity
+    reviews  *[user_is,product_id,rate[0:5],feedback,datetime]
     category  *[name,image]
 
 
 order :
-    status [recieved,processed,shiped,delivered]
-    user
-    id
-    total items
-    delivery time
+    code
+    status [Received,Processed,Shipped,Delivered]
     order time
-    total
-    sub_total 
+    delivery time
+    total product
+    address
+    discount
+    delivery fee 
+    products
+        name 
+        image
+        price 
+        quantity
+        brand
 
 
 order_detail :

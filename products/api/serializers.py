@@ -65,3 +65,7 @@ class BrandDetailSerializer(serializers.ModelSerializer):
     class Meta :
         model = Brand
         fields = '__all__'
+
+
+
+class Rev
