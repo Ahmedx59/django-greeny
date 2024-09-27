@@ -45,10 +45,14 @@ class BrandViewSet(viewsets.ModelViewSet):
     
         return super().get_serializer_class()
     
-class ReiviewCreateViewSet(mixins.CreateModelMixin,viewsets.GenericViewSet):
+class ReiviewCreateViewSet(mixins.ListModelMixin,
+                            mixins.CreateModelMixin,
+                            mixins.UpdateModelMixin,
+                            viewsets.GenericViewSet): 
+    
     queryset = ProductReview.objects.all()
     serializer_class = RivewListSerializer
 
-    # def get_queryset(self):
-    #     product_id = self.kwargs['product_id']
-    #     return super().get_queryset()
+    def get_queryset(self):
+        product_id = self.kwargs['product_id']
+        return super().get_queryset().filter(product=product_id)

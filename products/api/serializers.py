@@ -69,7 +69,7 @@ class BrandDetailSerializer(serializers.ModelSerializer):
 class RivewListSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductReview
-        fields = ['rate', 'review']
+        fields = ['id', 'rate', 'review']
 
     def create(self, validated_data):
         user = self.context['request'].user
@@ -79,3 +79,9 @@ class RivewListSerializer(serializers.ModelSerializer):
         validated_data['user'] = user
         validated_data['product'] = product
         return super().create(validated_data)
+    
+    def update(self, instance, validated_data):
+        user = self.context['request'].user
+        if instance.user != user:
+            raise serializers.ValidationError({"details":"permission denied you cant update this review"})
+        return super().update(instance, validated_data)
