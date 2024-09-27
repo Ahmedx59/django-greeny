@@ -41,8 +41,17 @@ class BrandViewSet(viewsets.ModelViewSet):
 
 
 
-class ReviewViewSet(mixins.CreateModelMixin,viewsets.GenericViewSet):
+class ReviewViewSet(mixins.CreateModelMixin,
+                    mixins.ListModelMixin,
+                    mixins.UpdateModelMixin,
+                    viewsets.GenericViewSet):
     queryset = ProductReview.objects.all()
     serializer_class = ProductReviewSerializer
+
+
+
+    def get_queryset(self):
+        product_id = self.kwargs['product_id']
+        return super().get_queryset().filter(product = product_id)
 
 

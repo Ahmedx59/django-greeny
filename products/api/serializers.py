@@ -71,7 +71,7 @@ class BrandDetailSerializer(serializers.ModelSerializer):
 class ProductReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductReview
-        fields = ['rate','review']
+        fields = ['id','rate','review']
 
 
     def create(self, validated_data):
@@ -82,3 +82,10 @@ class ProductReviewSerializer(serializers.ModelSerializer):
         validated_data['user'] = user
         validated_data['product'] = product
         return super().create(validated_data)
+    
+
+    def update(self, instance, validated_data):
+        user = self.context['request'].user
+        if instance.user != user:
+            raise serializers.ValidationError({'details':"you cant update"})
+        return super().update(instance, validated_data)
