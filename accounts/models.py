@@ -1,25 +1,43 @@
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils.translation import gettext as _
     
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, related_name="profile", on_delete=models.CASCADE)
-    image = models.ImageField( upload_to='profile-img', blank=True, null=True)
+class User(AbstractUser):
+    email = models.EmailField(_("Email Address"), blank=True, unique=True)
+
+    image = models.ImageField(_("Image"), upload_to='profile-img', blank=True, null=True)
     phone_num = models.CharField( max_length=50, blank=True)
     address = models.CharField( max_length=50, blank=True)
     facebook = models.URLField( max_length=200, blank=True)
     twitter = models.URLField( max_length=200, blank=True)
-    code = ''
+    activation_code = models.CharField( max_length=50, blank=True)
+    reset_pass_token = models.CharField( max_length=50, blank=True)
+    reset_pass_expiration_date = models.DateTimeField(blank=True, null=True)
 
-    def __str__(self) -> str:
-        return self.user
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username"]
 
-@receiver(post_save, sender=User)
-def profile_signal(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(
-            user= instance
-        )
+
+
+# class Profile(models.Model):
+#     user = models.OneToOneField(User, related_name="profile", on_delete=models.CASCADE)
+    # image = models.ImageField( upload_to='profile-img', blank=True, null=True)
+    # phone_num = models.CharField( max_length=50, blank=True)
+    # address = models.CharField( max_length=50, blank=True)
+    # facebook = models.URLField( max_length=200, blank=True)
+    # twitter = models.URLField( max_length=200, blank=True)
+    # code = ''
+
+#     def __str__(self) -> str:
+#         return f"{self.user} Profile"
+
+# @receiver(post_save, sender=User)
+# def profile_signal(sender, instance, created, **kwargs):
+#     if created:
+#         Profile.objects.create(
+#             user= instance
+#         )
