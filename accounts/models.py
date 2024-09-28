@@ -10,7 +10,7 @@ class User(AbstractUser):
     email = models.EmailField(_("Email Address"), blank=True, unique=True)
 
     image = models.ImageField(_("Image"), upload_to='profile-img', blank=True, null=True)
-    phone_num = models.CharField( max_length=50, blank=True)
+    phone_num = models.CharField( max_length=50, blank=True, )
     address = models.CharField( max_length=50, blank=True)
     facebook = models.URLField( max_length=200, blank=True)
     twitter = models.URLField( max_length=200, blank=True)
