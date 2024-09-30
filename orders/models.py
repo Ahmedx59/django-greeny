@@ -1,5 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from accounts.models import User
+
 from django.utils import timezone
 import datetime
 from products.models import Product
@@ -22,7 +24,8 @@ class Cart(models.Model):
     user = models.ForeignKey(User,related_name='user_cart',on_delete=models.SET_NULL , blank=True, null=True)
     status = models.CharField(max_length=10 , choices=CART_STATUS)
 
-
+    def __str__(self):
+        return str(self.user)
 
 
 class CartDetail(models.Model):
@@ -31,7 +34,8 @@ class CartDetail(models.Model):
     quantity = models.IntegerField()
     total = models.FloatField(blank=True, null=True)
 
-
+    def __str__(self):
+        return str(self.cart)
 
 class Order(models.Model):
     user = models.ForeignKey(User,related_name='user_order',on_delete=models.SET_NULL , blank=True, null=True)
@@ -39,8 +43,11 @@ class Order(models.Model):
     code = models.CharField(max_length=20,default=generate_code)
     order_time = models.DateTimeField(default=timezone.now)
     delivery_time = models.DateTimeField(blank=True, null=True)
+    coupon = models.ForeignKey('Coupon', related_name='order_coupon', on_delete=models.SET_NULL , blank=True, null=True)
+    total_after_coupon = models.FloatField(blank=True, null=True)
 
-
+    def __str__(self):
+        return self.user
 
 class OrderDetail(models.Model):
     order = models.ForeignKey(Order,related_name='order',on_delete=models.CASCADE)
@@ -49,6 +56,9 @@ class OrderDetail(models.Model):
     quantity = models.IntegerField()
     total = models.FloatField(blank=True, null=True)
 
+
+    def __str__(self):
+        return self.order
 
 
 class Coupon(models.Model):
