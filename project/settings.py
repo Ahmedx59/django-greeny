@@ -166,3 +166,7 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=375),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=375),
     }
+
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+

@@ -21,7 +21,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == 'retrieve':
             return ProductsDetailSerializer
-        if self.action in ['create', 'update']:
+        if self.action in ['create', 'update']: 
             return ProductsCreateSerializer
         return super().get_serializer_class()
         
