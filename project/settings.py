@@ -162,3 +162,5 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=100),
     "ROTATE_REFRESH_TOKENS": False,
 }
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
