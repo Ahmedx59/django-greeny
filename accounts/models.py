@@ -16,8 +16,8 @@ class User(AbstractUser):
     twitter = models.URLField(max_length=200, blank=True)
     activation_code = models.CharField(max_length=50, blank=True)
     reset_pass_token = models.CharField(max_length=50 , blank=True)
-    reset_pass_expire_date = models.DateTimeField(null=True , blank=True)
-
+    reset_pass_expire_date = models.DateTimeField(null=True , blank=True) 
+ 
 
     # def save(self, *args, **kwargs):
     #    self.activation_code = get_random_string() 
@@ -28,6 +28,10 @@ class User(AbstractUser):
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
+
+
+    def __str__(self) -> str:
+        return self.email
 
 
 
