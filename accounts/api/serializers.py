@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.core.validators import MinLengthValidator
 from django.core.mail import send_mail
+from django.utils.crypto import get_random_string
 
 from accounts.models import User
 
@@ -39,6 +40,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
         validated_data.pop('confirm_password')
         validated_data['is_active'] = False
         email = validated_data['email']
+        validated_data['activation_code'] = get_random_string(20)
+
         user = User.objects.create_user(**validated_data)
 
         send_mail(
@@ -59,11 +62,9 @@ class UserActivateSerializer(serializers.Serializer):
     def create(self, validated_data):
         code = validated_data['code']
         user = self.context['view'].get_object()
-        print(user, '='*100)
         if user.activation_code != code:
             raise serializers.ValidationError({"error":"The Code is not Vaild"})
-        print('='*100)
         user.is_active = True
         user.activation_code = ""
         user.save()      
-        return 
+        return {}

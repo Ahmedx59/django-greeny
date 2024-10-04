@@ -30,9 +30,9 @@ class User(AbstractUser):
     def __str__(self) -> str:
         return self.email
 
-    def save(self, *args, **kwargs):
-        self.activation_code = get_random_string(20)
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     self.activation_code = get_random_string(20)
+    #     super().save(*args, **kwargs)
 
 # class Profile(models.Model):
 #     user = models.OneToOneField(User, related_name="profile", on_delete=models.CASCADE)
