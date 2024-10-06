@@ -13,8 +13,9 @@ class CartDetailCreateApi(generics.GenericAPIView):
     serializer_class = CartSerializer
 
     def get(self,request,*args,**kwargs):
-        user = ''
-
+        user = User.objects.get(username=self.kwargs['username'])
+        cart , created = Cart.objects.get_or_create(user=user,status='InProgress')
+        data = CartSerializer(cart).data
 
     def post(self,request,*args,**kwargs):
         pass
