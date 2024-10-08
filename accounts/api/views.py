@@ -1,6 +1,7 @@
 from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
 
 from accounts.models import User
 from .serializers import UserSerializer, UserCreateSerializer, UserActivateSerializer
@@ -11,7 +12,12 @@ class UserViewSet(
 ):
     queryset = User.objects.all()
     serializer_class = UserCreateSerializer
+    permission_classes = [AllowAny]
 
+    # def get_permissions(self):
+    #     if self.action in ['create', 'activate']:
+    #         return AllowAny()
+    #     return super().get_permissions()
 
     @action(detail=True, methods=['post'], serializer_class=UserActivateSerializer)
     def activate(self, *args, **kwargs):

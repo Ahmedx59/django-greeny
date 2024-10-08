@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.core.validators import MinLengthValidator
 from django.core.mail import send_mail
 from django.utils.crypto import get_random_string
+from django.conf import settings
 
 from accounts.models import User
 
@@ -49,7 +50,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
             f'''welcome {user.username}.
             welocome to our store 
             Use this code {user.activation_code} to activate your account.''',
-            "omar@gmail.com",
+            settings.EMAIL_HOST_USER,
             [email],
             fail_silently=False,
         )
