@@ -2,8 +2,7 @@ from django.core.mail import send_mail
 from rest_framework import serializers
 from django.utils.crypto import get_random_string
 from django.core.validators import MinLengthValidator
-
-
+from django.conf import settings
 
 from accounts.models import User 
 
@@ -44,9 +43,9 @@ class UserCreateSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         
         send_mail(
-            f"welcome{user.username}",
-            f"Here is the activation code {user.activation_code}.",
-            "from@example.com",
+            f"Activation Code :",
+            f"welcome {user.username}\n Here is the activation code : {user.activation_code}.",
+            settings.EMAIL_HOST_USER,
             {user.email},
             fail_silently=False,
         )
@@ -65,7 +64,7 @@ class UserActivateSerializers(serializers.Serializer):
         user.activation_code = ''
         user.save()
         return {}
-
+ 
         
         
 

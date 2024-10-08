@@ -10,6 +10,6 @@ urlpatterns = [
 
 
     # api
-    path('<srt:username>/cart',CartDetailCreateApi.as_view())
+    path('<str:username>/cart',CartDetailCreateApi.as_view())
 ]
  
