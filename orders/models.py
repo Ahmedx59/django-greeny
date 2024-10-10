@@ -18,11 +18,16 @@ ORDER_STATUS=(
     ('Processed','Processed'),
     ('Shipped','Shipped'),
     ('Delivered','Delivered'),
-)
+) 
 
 class Cart(models.Model):
     user = models.ForeignKey(User,related_name='user_cart',on_delete=models.SET_NULL , blank=True, null=True)
     status = models.CharField(max_length=10 , choices=CART_STATUS)
+    coupon = models.ForeignKey('Coupon', related_name='cart_coupon', on_delete=models.SET_NULL , blank=True, null=True)
+    total_after_coupon = models.FloatField(blank=True, null=True)
+
+
+
 
     def __str__(self):
         return str(self.user)
@@ -45,7 +50,7 @@ class CartDetail(models.Model):
 
 class Order(models.Model):
     user = models.ForeignKey(User,related_name='user_order',on_delete=models.SET_NULL , blank=True, null=True)
-    status = models.CharField(max_length=10 , choices=ORDER_STATUS)
+    status = models.CharField(max_length=10 , choices=ORDER_STATUS , default='Received')
     code = models.CharField(max_length=20,default=generate_code)
     order_time = models.DateTimeField(default=timezone.now)
     delivery_time = models.DateTimeField(blank=True, null=True)
@@ -71,7 +76,7 @@ class Coupon(models.Model):
     code = models.CharField(max_length=30)
     discount = models.IntegerField()
     quantity = models.IntegerField()
-    oeder_time = models.DateTimeField(default=timezone.now)
+    order_time = models.DateTimeField(default=timezone.now)
     start_date = models.DateField(default=timezone.now)
     end_date = models.DateField(blank=True, null=True)
 
