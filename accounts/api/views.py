@@ -40,10 +40,8 @@ class ChangePasswordViewSet(mixins.CreateModelMixin
                             ,viewsets.GenericViewSet):
     serializer_class = ChangePasswordSerializer
 
-    @action(detail=False, methods=['post'])
+    @action(detail=False, methods=['post'] ,serializer_class=ForgetSerializer)
     def forget(self , *args, **kwargs):
-        data = self.request.data
-        serializer = ForgetSerializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response({'message':'email sent successfully'})
+        self.create(*args, **kwargs)
+        return Response ({'detail':'email was sent'},status=status.HTTP_200_OK)
+ 

@@ -118,3 +118,5 @@ class ForgetSerializer(serializers.Serializer):
             raise serializers.ValidationError({'error':'email is not valid'})
         return {}
     
+    def to_representation(self, instance):
+        return {}
