@@ -7,4 +7,4 @@ router = DefaultRouter()
 router.register('product-viewset' , ProductViewSet)
 router.register('brands-viewset',BrandViewSet)
 router.register(r'product-viewset/(?P<product_id>\d+)/review' ,ReviewViewSet)
-urlpatterns = router.urls
+urlpatterns = router.urls 

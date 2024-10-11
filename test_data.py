@@ -17,12 +17,6 @@ def brand_data(n):
     )   
     print (f'sucsful creat {n} ')
 
-
-
-
-
-
-
 def category_data(n):
     faker = Faker()
     for x in range(n):
@@ -32,12 +26,6 @@ def category_data(n):
             
         )
     print(f'sucsful creat {n} ')
-
-
-# category_data(5)
-
-
-
 
 
 # print(category_count)
@@ -54,7 +42,7 @@ def product_data(n):
             desc = faker.sentence(),
             price = round(random.uniform(10.99,99.99),2),
             flag = random.choice(['New','Feature','Sale']),
-            quantitity = random.randint(0,100),
+            quantity = random.randint(0,100),
             brand = Brand.objects.get(id = random.randint(1,brand_count)),
             category = Category.objects.get(id = random.randint(1,category_count))
 
@@ -63,5 +51,6 @@ def product_data(n):
 
 
 
+category_data(10)
+brand_data(10)
 product_data(10)
-

@@ -1,8 +1,10 @@
 from django.core.mail import send_mail
-from rest_framework import serializers
+from rest_framework.response import Response 
+from rest_framework import serializers,status
 from django.utils.crypto import get_random_string
 from django.core.validators import MinLengthValidator
 from django.conf import settings
+from django.contrib.auth.hashers import make_password , check_password
 
 from accounts.models import User 
 
@@ -65,9 +67,35 @@ class UserActivateSerializers(serializers.Serializer):
         user.save()
         return {}
  
-        
-        
 
 
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+    confirm_new_password = serializers.CharField(required=True , write_only=True)
+
+
+    def validate(self, attrs):
+        user= self.context['request'].user
+        if not check_password(attrs['old_password'] , user.password):
+            raise serializers.ValidationError({'error':'old password not equal password'})
+        
+       
+        if attrs['new_password'] != attrs['confirm_new_password']:
+            raise serializers.ValidationError({'error':'new password not equal confirm password'})
+        
+        return super().validate(attrs)
+    
+
+    def create(self, validated_data):
+        user= self.context['request'].user
+        user.set_password(validated_data['new_password'])
+        user.save()
+        
+        return {}
+        
+
+    def to_representation(self, instance):
+        return {'message': 'Password change process completed.'}
 
     

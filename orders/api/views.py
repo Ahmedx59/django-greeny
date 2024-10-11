@@ -1,13 +1,11 @@
 from rest_framework import generics
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.models import User
+from accounts.models import User
 from .serializers import CartSerializer , OrderListSerializer , OrderDetailSerializer , OrderProductsSerializer
 from orders.models import Cart , CartDetail ,Order , OrderDetail , Coupon
 from products.models import Product
-import datetime
-
-
+import datetime 
 
 class CartDetailCreateApi(generics.GenericAPIView):
     serializer_class = CartSerializer
@@ -22,11 +20,15 @@ class CartDetailCreateApi(generics.GenericAPIView):
         user = User.objects.get(username=self.kwargs['username'])
         product = Product.objects.get(id=request.data['product_id'])
         quantity = int(request.data['quantity'])
+        print(quantity,'='*100)
+
         cart = Cart.objects.get(user = user , status='InProgress')
+        print(cart,'='*100)
         cart_detail , created = CartDetail.objects.get_or_create(cart=cart,product=product)
         cart_detail.quantity = quantity 
         cart_detail.total = round(quantity* product.price ,2)
         cart_detail.save()
+
         cart = Cart.objects.get(username = self.kwargs['username'])
         data = CartSerializer(cart).data
         return Response({'message':'Product add successfully', 'cart':data})
@@ -73,7 +75,7 @@ class CreateOrderAPI(generics.GenericAPIView):
         cart_detail = CartDetail.objects.filter(cart=cart)
         new_order = Order.objects.create(
             user = user,
-            coupon = Cart.coupon,
+            coupon = cart.coupon,
             total_after_coupon = cart.total_after_coupon
         )
         for object in cart_detail:

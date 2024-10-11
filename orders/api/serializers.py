@@ -13,10 +13,14 @@ class CartDetailSerializer(serializers.ModelSerializer):
 
 
 class CartSerializer(serializers.ModelSerializer):
-    cart_derail = CartDetailSerializer(many=True)
+    cart_detail = CartDetailSerializer(many=True)
     class Meta:
         model = Cart
-        fields = '__all__'
+        fields = ['user',
+            'status',
+            'coupon',
+            'total_after_coupon',
+            'cart_detail']
 
 class OrderListSerializer(serializers.ModelSerializer):
     class Meta:

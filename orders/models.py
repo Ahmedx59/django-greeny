@@ -42,7 +42,7 @@ class Cart(models.Model):
 class CartDetail(models.Model):
     cart = models.ForeignKey(Cart,related_name='cart_detail',on_delete=models.CASCADE)
     product = models.ForeignKey(Product,related_name='cart_product',on_delete=models.SET_NULL , blank=True, null=True)
-    quantity = models.IntegerField()
+    quantity = models.IntegerField(blank=True, null=True)
     total = models.FloatField(blank=True, null=True)
 
     def __str__(self):
