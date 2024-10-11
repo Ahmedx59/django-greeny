@@ -5,7 +5,7 @@ from accounts.api.views import UserViewSet , ChangePasswordViewSet
 
 router = DefaultRouter()
 router.register('users' , UserViewSet)
-router.register('change-password' , ChangePasswordViewSet , basename='change-password')
+router.register('password' , ChangePasswordViewSet , basename='change-password')
 
 app_name = 'accounts'
 

@@ -5,7 +5,7 @@ from django.utils.crypto import get_random_string
 from django.core.validators import MinLengthValidator
 from django.conf import settings
 from django.contrib.auth.hashers import make_password , check_password
-
+from datetime import datetime , timedelta
 from accounts.models import User 
 
 
@@ -45,7 +45,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         
         send_mail(
-            f"Activation Code :",
+            f"Activation Code ",
             f"welcome {user.username}\n Here is the activation code : {user.activation_code}.",
             settings.EMAIL_HOST_USER,
             {user.email},
@@ -71,8 +71,8 @@ class UserActivateSerializers(serializers.Serializer):
 
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(required=True)
-    new_password = serializers.CharField(required=True)
-    confirm_new_password = serializers.CharField(required=True , write_only=True)
+    new_password = serializers.CharField(required=True , validators=[MinLengthValidator(8)])
+    confirm_new_password = serializers.CharField(required=True , write_only=True , validators=[MinLengthValidator(8)])
 
 
     def validate(self, attrs):
@@ -80,22 +80,41 @@ class ChangePasswordSerializer(serializers.Serializer):
         if not check_password(attrs['old_password'] , user.password):
             raise serializers.ValidationError({'error':'old password not equal password'})
         
-       
         if attrs['new_password'] != attrs['confirm_new_password']:
             raise serializers.ValidationError({'error':'new password not equal confirm password'})
         
-        return super().validate(attrs)
-    
+        return super().validate(attrs)    
 
     def create(self, validated_data):
         user= self.context['request'].user
         user.set_password(validated_data['new_password'])
-        user.save()
-        
+        user.save()       
         return {}
         
-
     def to_representation(self, instance):
         return {'message': 'Password change process completed.'}
 
+    
+class ForgetSerializer(serializers.Serializer):
+
+    email = serializers.CharField(required=True)
+
+    def create(self,validated_data):
+        try:
+            user = User.objects.get(email=validated_data['email'])
+            user.reset_pass_token = get_random_string(20)
+            user.reset_pass_expire_date = datetime.now() + timedelta(minutes=30)
+            user.save()
+
+            send_mail(
+                f"Reset Password Token ",
+                f"welcome {user.username}\n follow this link  to reset your password : http://127.0.0.1:8000/api/password/reset/{user.reset_pass_token}.",
+                settings.EMAIL_HOST_USER,
+                {user.email},
+                fail_silently=False,
+            )
+
+        except User.DoesNotExist:
+            raise serializers.ValidationError({'error':'email is not valid'})
+        return {}
     

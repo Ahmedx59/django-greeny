@@ -6,8 +6,6 @@ from django.utils.crypto import get_random_string
 
 
 class User(AbstractUser):
-    
-
     email = models.EmailField(_("email address"),unique=True, blank=True)
     image = models.ImageField(upload_to='user_image',blank=True, null=True)
     phone_number = models.CharField(max_length=50 , blank=True)
@@ -20,8 +18,7 @@ class User(AbstractUser):
  
 
     # def save(self, *args, **kwargs):
-    #    self.activation_code = get_random_string() 
-       
+    #    self.activation_code = get_random_string()      
     #    super().save(*args, **kwargs) # Call the real save() method
 
 
