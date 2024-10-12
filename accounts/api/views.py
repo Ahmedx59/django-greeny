@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response 
 from rest_framework.permissions import AllowAny
 
-from .serializers import UserCreateSerializer , UserListSerializer ,UserRetrieveSerializer  , UserActivateSerializers , ChangePasswordSerializer , ForgetSerializer
+from .serializers import UserCreateSerializer , UserListSerializer ,UserRetrieveSerializer  , UserActivateSerializers , ChangePasswordSerializer , ForgetSerializer, ResetSerializer
 from accounts.models import User
 
 class UserViewSet(
@@ -44,4 +44,12 @@ class ChangePasswordViewSet(mixins.CreateModelMixin
     def forget(self , *args, **kwargs):
         self.create(*args, **kwargs)
         return Response ({'detail':'email was sent'},status=status.HTTP_200_OK)
+   
+    @action(detail=True , methods=['post'])
+    def reset(self, *args, **kwargs):
+        data = self.request.data
+        serializer = ResetSerializer(data=data)
+        serializer.is_valid(raise_exception =True)
+        serializer.save()
+        return Response ({'detail':'password reset successfully'},status=status.HTTP_200_OK)
  

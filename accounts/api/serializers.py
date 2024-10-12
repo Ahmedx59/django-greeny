@@ -96,7 +96,6 @@ class ChangePasswordSerializer(serializers.Serializer):
 
     
 class ForgetSerializer(serializers.Serializer):
-
     email = serializers.CharField(required=True)
 
     def create(self,validated_data):
@@ -108,7 +107,7 @@ class ForgetSerializer(serializers.Serializer):
 
             send_mail(
                 f"Reset Password Token ",
-                f"welcome {user.username}\n follow this link  to reset your password : http://127.0.0.1:8000/api/password/reset/{user.reset_pass_token}.",
+                f"welcome {user.username}\n follow this link  to reset your password : http://127.0.0.1:8000/api/password/reset?token={user.reset_pass_token}.",
                 settings.EMAIL_HOST_USER,
                 {user.email},
                 fail_silently=False,
@@ -120,3 +119,19 @@ class ForgetSerializer(serializers.Serializer):
     
     def to_representation(self, instance):
         return {}
+    
+class ResetSerializer(serializers.Serializer):
+    new_password = serializers.CharField(required=True)
+    confirm_password = serializers.CharField(required=True, write_only=True)
+
+    def create(self, validated_data):
+        token = self.context['request'].GET['token']
+        user = User.objects.get(token=token)
+        if validated_data['new_password'] != validated_data['confirm_password']:
+            raise serializers.ValidationError({'message':'tha passwords not equel'})
+        
+        user.set_password(validated_data['new_password'])
+        user.save()
+
+        return {}
+    
