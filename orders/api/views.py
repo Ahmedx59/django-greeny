@@ -15,7 +15,7 @@ class CartDetailCreateApi(generics.GenericAPIView):
         cart , created = Cart.objects.get_or_create(user=user,status='InProgress')
         data = CartSerializer(cart).data
         return Response({'cart':data})
-
+ 
     def post(self,request,*args,**kwargs):
         user = User.objects.get(username=self.kwargs['username'])
         product = Product.objects.get(id=request.data['product_id'])
@@ -49,7 +49,7 @@ class OrderListAPI(generics.ListAPIView):
 
 
     def list(self, request, *args, **kwargs):
-        user = User.objects.get(username = self.kwargs['username'])
+        user = User.objects.get(user = request.user)
         queryset = self.get_queryset().filter(user=user)
         data = OrderListSerializer(queryset , many=True).data
         return Response(data )

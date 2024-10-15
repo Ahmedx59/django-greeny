@@ -36,20 +36,24 @@ class UserViewSet(
         serializer.save()
         return Response ({'detail':'your account successfully'},status=status.HTTP_200_OK)
     
-class ChangePasswordViewSet(mixins.CreateModelMixin
-                            ,viewsets.GenericViewSet):
-    serializer_class = ChangePasswordSerializer
 
-    @action(detail=False, methods=['post'] ,serializer_class=ForgetSerializer)
-    def forget(self , *args, **kwargs):
+
+class ChangePasswordViewSet(mixins.CreateModelMixin
+                        ,viewsets.GenericViewSet):
+    serializer_class = ChangePasswordSerializer
+    permission_classes = [AllowAny]
+
+
+    @action(detail=False , methods=['post'] , serializer_class=ForgetSerializer)
+    def forget(self, *args, **kwargs):
         self.create(*args, **kwargs)
-        return Response ({'detail':'email was sent'},status=status.HTTP_200_OK)
-   
-    @action(detail=True , methods=['post'])
+        return Response({'message':'email was sent'},status=status.HTTP_200_OK)
+    
+    @action(detail=True,methods=['post'])
     def reset(self, *args, **kwargs):
+        token = self.kwargs['pk']
         data = self.request.data
-        serializer = ResetSerializer(data=data)
-        serializer.is_valid(raise_exception =True)
-        serializer.save()
-        return Response ({'detail':'password reset successfully'},status=status.HTTP_200_OK)
- 
+        Serializer = ResetSerializer(data=data , context={'token':token})
+        Serializer.is_valid(raise_exception=True)
+        Serializer.save()
+        return Response({'detail':'password reset successfully'},status=status.HTTP_200_OK) 

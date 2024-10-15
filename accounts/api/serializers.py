@@ -6,6 +6,8 @@ from django.core.validators import MinLengthValidator
 from django.conf import settings
 from django.contrib.auth.hashers import make_password , check_password
 from datetime import datetime , timedelta
+from django.utils import timezone
+
 from accounts.models import User 
 
 
@@ -67,71 +69,97 @@ class UserActivateSerializers(serializers.Serializer):
         user.save()
         return {}
  
-
-
 class ChangePasswordSerializer(serializers.Serializer):
-    old_password = serializers.CharField(required=True)
-    new_password = serializers.CharField(required=True , validators=[MinLengthValidator(8)])
-    confirm_new_password = serializers.CharField(required=True , write_only=True , validators=[MinLengthValidator(8)])
+    old_password = serializers.CharField(required = True)
+    new_password = serializers.CharField(required = True)
+    confirm_new_password = serializers.CharField(required =True)
 
+    def create(self, validated_data):
 
-    def validate(self, attrs):
-        user= self.context['request'].user
-        if not check_password(attrs['old_password'] , user.password):
-            raise serializers.ValidationError({'error':'old password not equal password'})
+        user = self.context['request'].user
+        if not check_password(validated_data['old_password'] , user.password):
+            raise serializers.ValidationError({'message':'old message not equal password'})
         
-        if attrs['new_password'] != attrs['confirm_new_password']:
+        if validated_data['new_password'] != validated_data['confirm_new_password']:
             raise serializers.ValidationError({'error':'new password not equal confirm password'})
-        
-        return super().validate(attrs)    
-
-    def create(self, validated_data):
-        user= self.context['request'].user
-        user.set_password(validated_data['new_password'])
-        user.save()       
-        return {}
-        
-    def to_representation(self, instance):
-        return {'message': 'Password change process completed.'}
-
-    
-class ForgetSerializer(serializers.Serializer):
-    email = serializers.CharField(required=True)
-
-    def create(self,validated_data):
-        try:
-            user = User.objects.get(email=validated_data['email'])
-            user.reset_pass_token = get_random_string(20)
-            user.reset_pass_expire_date = datetime.now() + timedelta(minutes=30)
-            user.save()
-
-            send_mail(
-                f"Reset Password Token ",
-                f"welcome {user.username}\n follow this link  to reset your password : http://127.0.0.1:8000/api/password/reset?token={user.reset_pass_token}.",
-                settings.EMAIL_HOST_USER,
-                {user.email},
-                fail_silently=False,
-            )
-
-        except User.DoesNotExist:
-            raise serializers.ValidationError({'error':'email is not valid'})
-        return {}
-    
-    def to_representation(self, instance):
-        return {}
-    
-class ResetSerializer(serializers.Serializer):
-    new_password = serializers.CharField(required=True)
-    confirm_password = serializers.CharField(required=True, write_only=True)
-
-    def create(self, validated_data):
-        token = self.context['request'].GET['token']
-        user = User.objects.get(token=token)
-        if validated_data['new_password'] != validated_data['confirm_password']:
-            raise serializers.ValidationError({'message':'tha passwords not equel'})
         
         user.set_password(validated_data['new_password'])
         user.save()
 
         return {}
     
+    def to_representation(self, instance):
+        return {'message': 'Password change process completed.'}
+
+
+
+#     old_password = serializers.CharField(required=True)
+#     new_password = serializers.CharField(required=True , validators=[MinLengthValidator(8)])
+#     confirm_new_password = serializers.CharField(required=True , write_only=True , validators=[MinLengthValidator(8)])
+
+
+#     def validate(self, attrs):
+#         user= self.context['request'].user
+#         if not check_password(attrs['old_password'] , user.password):
+#             raise serializers.ValidationError({'error':'old password not equal password'})
+        
+#         if attrs['new_password'] != attrs['confirm_new_password']:
+#             raise serializers.ValidationError({'error':'new password not equal confirm password'})
+        
+#         return super().validate(attrs)    
+
+#     def create(self, validated_data):
+#         user= self.context['request'].user
+#         user.set_password(validated_data['new_password'])
+#         user.save()       
+#         return {}
+        
+#     def to_representation(self, instance):
+#         return {'message': 'Password change process completed.'}
+
+    
+class ForgetSerializer(serializers.Serializer):
+    email = serializers.CharField(required=True)
+
+    def create(self, validated_data):
+        try:
+            user = User.objects.get(email = validated_data['email'])
+            user.reset_pass_token = get_random_string(20)
+            user.reset_pass_expire_date = datetime.now() + timedelta(minutes=30)
+            user.save()
+
+            link = f'http://127.0.0.1:8000/api/password/{user.reset_pass_token}/reset/'
+
+            send_mail(
+            f"Pass Token Code ",
+            f"welcome {user.username}\n click this link to reset password {link}",
+            settings.EMAIL_HOST_USER,
+            {user.email},
+            fail_silently=False,
+            )
+
+        except User.DoesNotExist:
+            raise serializers.ValidationError({'message':'email not found'})
+        
+        return {}
+  
+class ResetSerializer(serializers.Serializer):
+    new_password=serializers.CharField(required=True)
+    confirm_new_password=serializers.CharField(required=True , write_only=True)
+
+    def create(self, validated_data):
+        token = self.context['token']
+        user = User.objects.filter(reset_pass_token=token).first()
+        if user.reset_pass_expire_date < timezone.now():
+            
+            raise serializers.ValidationError({'message':'token is expired'})
+        
+        if validated_data['new_password'] != validated_data['confirm_new_password']:
+            raise serializers.ValidationError({'message':'tha passwords not equal'})
+        
+        user.set_password(validated_data['new_password'])
+        user.save()
+
+        return{}
+
+

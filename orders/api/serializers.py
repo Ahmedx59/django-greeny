@@ -11,7 +11,7 @@ class CartDetailSerializer(serializers.ModelSerializer):
         fields = '__all__'
  
 
-
+ 
 class CartSerializer(serializers.ModelSerializer):
     cart_detail = CartDetailSerializer(many=True)
     class Meta:
