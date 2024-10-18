@@ -8,21 +8,13 @@ from products.models import Product
 from utils.generate_code import generate_code
  
 
-CART_STATUS=(
-    ('InProgress','InProgress'),
-    ('Completed','Completed'),
-)
-
-ORDER_STATUS=(
-    ('Received','Received'),
-    ('Processed','Processed'),
-    ('Shipped','Shipped'),
-    ('Delivered','Delivered'),
-) 
-
 class Cart(models.Model):
+    class CartStatus(models.TextChoices):
+        IN_PROGRESS = 'InProgress'
+        COMPLETED = 'Completed'
+
     user = models.ForeignKey(User,related_name='user_cart',on_delete=models.SET_NULL , blank=True, null=True)
-    status = models.CharField(max_length=10 , choices=CART_STATUS)
+    status = models.CharField(max_length=10 , choices=CartStatus.choices , default=CartStatus.IN_PROGRESS)
     coupon = models.ForeignKey('Coupon', related_name='cart_coupon', on_delete=models.SET_NULL , blank=True, null=True)
     total_after_coupon = models.FloatField(blank=True, null=True)
 
@@ -49,8 +41,14 @@ class CartDetail(models.Model):
         return str(self.cart)
 
 class Order(models.Model):
+    class OrderStatus(models.TextChoices):
+        RECEIVED ='Received'
+        PROCESSED = 'Processed'
+        SHIPPED = 'Shipped'
+        DELIVERED = 'Delivered'
+
     user = models.ForeignKey(User,related_name='user_order',on_delete=models.SET_NULL , blank=True, null=True)
-    status = models.CharField(max_length=10 , choices=ORDER_STATUS , default='Received')
+    status = models.CharField(max_length=10 , choices=OrderStatus.choices , default=OrderStatus.RECEIVED)
     code = models.CharField(max_length=20,default=generate_code)
     order_time = models.DateTimeField(default=timezone.now)
     delivery_time = models.DateTimeField(blank=True, null=True)
@@ -58,18 +56,23 @@ class Order(models.Model):
     total_after_coupon = models.FloatField(blank=True, null=True)
 
     def __str__(self):
-        return self.user
+        return str(self.user)
+    
+    def save(self, *args, **kwargs):
+       days = datetime.timedelta(days=5)
+       self.delivery_time = self.order_time + days
+       super().save(*args, **kwargs)
 
 class OrderDetail(models.Model):
     order = models.ForeignKey(Order,related_name='order',on_delete=models.CASCADE)
     product = models.ForeignKey(Product,related_name='order_product',on_delete=models.SET_NULL , blank=True, null=True)
-    price = models.FloatField
+    price = models.FloatField(blank=True, null=True)
     quantity = models.IntegerField()
     total = models.FloatField(blank=True, null=True)
 
 
     def __str__(self):
-        return self.order
+        return str(self.order)
 
 
 class Coupon(models.Model):

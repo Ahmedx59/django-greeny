@@ -16,11 +16,14 @@ class CartSerializer(serializers.ModelSerializer):
     cart_detail = CartDetailSerializer(many=True)
     class Meta:
         model = Cart
-        fields = ['user',
+        fields = [
+            'user',
             'status',
             'coupon',
             'total_after_coupon',
-            'cart_detail']
+            'cart_detail'
+        ]
+ 
 
 class OrderListSerializer(serializers.ModelSerializer):
     class Meta:
@@ -28,17 +31,28 @@ class OrderListSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
-class OrderProductsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Order
-        fields = '__all__'
-
-        
 class OrderDetailSerializer(serializers.ModelSerializer):
-    products = OrderProductsSerializer(many=True , source = 'order')
+    # products = OrderProductsSerializer(many=True , source = 'order')
     user = serializers.StringRelatedField()
     class Meta:
-        model = Order
+        model = OrderDetail
         fields = '__all__'
 
+
+class OrderProductsSerializer(serializers.ModelSerializer):
+    # order_detail = OrderDetailSerializer(many=True)
+    class Meta:
+        model = Order
+        fields = (
+            'user',
+            'status',
+            'code',
+            'order_time',
+            'delivery_time',
+            'coupon',
+            'total_after_coupon',
+            # 'order_detail',
+        )
+
+
+        
