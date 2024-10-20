@@ -44,10 +44,15 @@ class CartCreateSerializer(serializers.Serializer):
 
         return {}
     
-
     def to_representation(self, instance):
         return ({'message':'Product add successfully'})
- 
+    
+
+# class DeleteCartDetailSerializer(serializers.ModelSerializer):
+#     product_id = serializers.IntegerField(required = True)
+#     quantity = serializers.IntegerField(required = True)
+
+
 
 class OrderListSerializer(serializers.ModelSerializer):
     class Meta:
@@ -55,28 +60,31 @@ class OrderListSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+
+
+
 class OrderDetailSerializer(serializers.ModelSerializer):
     # products = OrderProductsSerializer(many=True , source = 'order')
-    user = serializers.StringRelatedField()
+    user = serializers.StringRelatedField() 
     class Meta:
-        model = OrderDetail
+        model = Order
         fields = '__all__'
 
 
-class OrderProductsSerializer(serializers.ModelSerializer):
-    # order_detail = OrderDetailSerializer(many=True)
-    class Meta:
-        model = Order
-        fields = (
-            'user',
-            'status',
-            'code',
-            'order_time',
-            'delivery_time',
-            'coupon',
-            'total_after_coupon',
-            # 'order_detail',
-        )
+# class OrderProductsSerializer(serializers.ModelSerializer):
+#     # order_detail = OrderDetailSerializer(many=True)
+#     class Meta:
+#         model = Order
+#         fields = (
+#             'user',
+#             'status',
+#             'code',
+#             'order_time',
+#             'delivery_time',
+#             'coupon',
+#             'total_after_coupon',
+#             # 'order_detail',
+#         )
 
 
         
